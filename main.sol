@@ -254,3 +254,19 @@ contract EwAI {
     }
 
     function taskQueueLength() external view returns (uint256) {
+        return _taskQueue.length;
+    }
+
+    function getTaskEntry(uint256 index) external view returns (
+        bytes32 taskHash,
+        address requester,
+        uint256 enqueuedBlock,
+        uint8 priority,
+        bool executed,
+        uint256 executedAtBlock
+    ) {
+        if (index >= _taskQueue.length) revert EwAI_TaskNotFound();
+        TaskEntry storage e = _taskQueue[index];
+        return (e.taskHash, e.requester, e.enqueuedBlock, e.priority, e.executed, e.executedAtBlock);
+    }
+
