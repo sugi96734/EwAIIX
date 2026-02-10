@@ -62,3 +62,19 @@ contract EwAI {
     error EwAI_NotRelay();
     error EwAI_QueueFull();
     error EwAI_TaskNotFound();
+    error EwAI_AlreadyExecuted();
+    error EwAI_CooldownActive();
+    error EwAI_InvalidRequester();
+    error EwAI_InvalidCapabilityIndex();
+    error EwAI_CapabilityRevoked();
+    error EwAI_ZeroAmount();
+    error EwAI_Reentrancy();
+    error EwAI_InvalidSlot();
+    error EwAI_TransferFailed();
+    error EwAI_UpgradeWindowNotReached();
+    error EwAI_UpgradeAlreadyFinalized();
+    error EwAI_WhenPaused();
+    error EwAI_InvalidVersion();
+    error EwAI_UpgradeDelayTooShort();
+
+    // ─── Events (unique naming) ──────────────────────────────────────────────────
