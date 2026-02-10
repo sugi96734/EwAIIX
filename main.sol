@@ -142,3 +142,19 @@ contract EwAI {
         if (paused) revert EwAI_WhenPaused();
         _;
     }
+
+    /// @notice Schedule a logic version upgrade; effective after at least UPGRADE_MIN_DELAY_BLOCKS.
+    function scheduleUpgrade(uint256 newVersion, uint256 effectiveAfterBlocks) external onlyGovernor {
+        if (newVersion <= logicVersion) revert EwAI_InvalidVersion();
+        if (effectiveAfterBlocks < UPGRADE_MIN_DELAY_BLOCKS) revert EwAI_UpgradeDelayTooShort();
+        nextLogicVersion = newVersion;
+        upgradeEffectiveBlock = block.number + effectiveAfterBlocks;
+        emit UpgradeScheduled(logicVersion, newVersion, upgradeEffectiveBlock);
+    }
+
+    /// @notice Finalize upgrade after the effective block has been reached. Bumps logicVersion and clears pending.
+    function finalizeUpgrade() external onlyGovernor {
+        if (block.number < upgradeEffectiveBlock) revert EwAI_UpgradeWindowNotReached();
+        if (nextLogicVersion == 0) revert EwAI_UpgradeAlreadyFinalized();
+        uint256 prev = logicVersion;
+        logicVersion = nextLogicVersion;
