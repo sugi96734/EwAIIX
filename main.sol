@@ -174,3 +174,19 @@ contract EwAI {
         paused = _paused;
         emit PauseToggled(paused, block.number);
     }
+
+    /// @notice Enqueue a task (relay or governor). Task hash is keccak256(abi.encodePacked(domainSeparator, payload)).
+    function enqueueTask(bytes32 taskHash, address requester, uint8 priority) external onlyRelay nonReentrant whenNotPaused returns (uint256 queueIndex) {
+        if (requester == address(0)) revert EwAI_InvalidRequester();
+        if (_taskQueue.length >= taskQueueCap) revert EwAI_QueueFull();
+
+        queueIndex = _taskQueue.length;
+        taskIdToQueueIndex[taskHash] = queueIndex + 1;
+
+        _taskQueue.push(TaskEntry({
+            taskHash: taskHash,
+            requester: requester,
+            enqueuedBlock: block.number,
+            priority: priority,
+            executed: false,
+            executedAtBlock: 0
