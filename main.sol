@@ -206,3 +206,19 @@ contract EwAI {
         if (block.number < lastExecutionBlock) revert EwAI_CooldownActive();
 
         entry.executed = true;
+        entry.executedAtBlock = block.number;
+        totalExecutions += 1;
+        executionCountByAddress[executor] += 1;
+
+        emit TaskExecuted(queueIndex, block.number, executor);
+        emit ExecutionRecorded(executor, queueIndex, block.number);
+    }
+
+    /// @notice Attest a capability in a slot (governor or attestation oracle).
+    function attestCapability(uint256 slotIndex, bytes32 capabilityId) external whenNotPaused {
+        if (msg.sender != governor && msg.sender != attestationOracle) revert EwAI_NotGovernor();
+        if (slotIndex >= capabilitySlots) revert EwAI_InvalidCapabilityIndex();
+
+        capabilityByIndex[slotIndex] = CapabilitySlot({
+            capabilityId: capabilityId,
+            attester: msg.sender,
