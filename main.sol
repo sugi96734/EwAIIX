@@ -110,3 +110,19 @@ contract EwAI {
             )
         );
 
+        logicVersion = 1;
+        nextLogicVersion = 0;
+        upgradeEffectiveBlock = 0;
+        paused = false;
+    }
+
+    modifier onlyGovernor() {
+        if (msg.sender != governor) revert EwAI_NotGovernor();
+        _;
+    }
+
+    modifier onlyExecutor() {
+        if (msg.sender != executor) revert EwAI_NotExecutor();
+        _;
+    }
+
