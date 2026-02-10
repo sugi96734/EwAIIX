@@ -30,3 +30,19 @@ contract EwAI {
         bool executed;
         uint256 executedAtBlock;
     }
+
+    struct CapabilitySlot {
+        bytes32 capabilityId;
+        address attester;
+        uint256 attestedAtBlock;
+        bool revoked;
+    }
+
+    TaskEntry[] private _taskQueue;
+    mapping(uint256 => CapabilitySlot) public capabilityByIndex;
+    mapping(address => uint256) public executionCountByAddress;
+    mapping(bytes32 => uint256) public taskIdToQueueIndex;
+
+    uint256 public totalExecutions;
+    uint256 public totalRewardDisbursed;
+    uint256 private _reentrancyLock;
