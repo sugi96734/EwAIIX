@@ -238,3 +238,19 @@ contract EwAI {
     }
 
     /// @notice Disburse reward to treasury or a recipient (governor only). Contract must hold balance.
+    function disburseReward(address recipient, uint256 amount) external onlyGovernor nonReentrant whenNotPaused {
+        if (amount == 0) revert EwAI_ZeroAmount();
+        if (recipient == address(0)) revert EwAI_InvalidRequester();
+
+        totalRewardDisbursed += amount;
+        (bool ok,) = recipient.call{ value: amount }("");
+        if (!ok) revert EwAI_TransferFailed();
+        emit RewardDisbursed(recipient, amount);
+    }
+
+    /// @notice Compute reward for an execution (view). reward = basisPoints of a base unit; for display only.
+    function computeRewardForExecution(uint256 baseUnit) external view returns (uint256) {
+        return (baseUnit * rewardBasisPoints) / BP_DENOM;
+    }
+
+    function taskQueueLength() external view returns (uint256) {
