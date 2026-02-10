@@ -158,3 +158,19 @@ contract EwAI {
         if (nextLogicVersion == 0) revert EwAI_UpgradeAlreadyFinalized();
         uint256 prev = logicVersion;
         logicVersion = nextLogicVersion;
+        nextLogicVersion = 0;
+        upgradeEffectiveBlock = 0;
+        emit UpgradeFinalized(logicVersion);
+    }
+
+    /// @notice Current active logic version (returns nextLogicVersion once upgrade window has passed, until finalizeUpgrade).
+    function currentLogicVersion() external view returns (uint256) {
+        if (nextLogicVersion != 0 && block.number >= upgradeEffectiveBlock) return nextLogicVersion;
+        return logicVersion;
+    }
+
+    /// @notice Governor can pause state-changing operations (circuit breaker).
+    function setPaused(bool _paused) external onlyGovernor {
+        paused = _paused;
+        emit PauseToggled(paused, block.number);
+    }
