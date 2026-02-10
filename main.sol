@@ -126,3 +126,19 @@ contract EwAI {
         _;
     }
 
+    modifier onlyRelay() {
+        if (msg.sender != relay) revert EwAI_NotRelay();
+        _;
+    }
+
+    modifier nonReentrant() {
+        if (_reentrancyLock != 0) revert EwAI_Reentrancy();
+        _reentrancyLock = 1;
+        _;
+        _reentrancyLock = 0;
+    }
+
+    modifier whenNotPaused() {
+        if (paused) revert EwAI_WhenPaused();
+        _;
+    }
