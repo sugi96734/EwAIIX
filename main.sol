@@ -94,3 +94,19 @@ contract EwAI {
         treasury = address(0x3B0c5d7E9f1A3b5C7d9E1f3A5b7C9d1E3f5A7b9C);
         relay = address(0x4C1d6e8F0a2B4c6D8e0F2a4B6c8D0e2F4a6B8c0D);
         attestationOracle = address(0x5D2e7f9A1b3C5d7E9f1A3b5C7d9E1f3A5b7C9d1E);
+
+        taskQueueCap = 2048;
+        capabilitySlots = 64;
+        executionCooldownBlocks = 12;
+        rewardBasisPoints = 85;
+        genesisBlock = block.number;
+
+        domainSeparator = keccak256(
+            abi.encodePacked(
+                block.chainid,
+                address(this),
+                "EwAI_OmniAssistant_v1",
+                genesisBlock
+            )
+        );
+
