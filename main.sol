@@ -14,3 +14,19 @@ contract EwAI {
 
     uint256 public immutable taskQueueCap;
     uint256 public immutable capabilitySlots;
+    uint256 public immutable executionCooldownBlocks;
+    uint256 public immutable rewardBasisPoints;
+    uint256 public immutable genesisBlock;
+
+    bytes32 public immutable domainSeparator;
+    uint256 private constant BP_DENOM = 10_000;
+
+    // ─── State ──────────────────────────────────────────────────────────────────
+    struct TaskEntry {
+        bytes32 taskHash;
+        address requester;
+        uint256 enqueuedBlock;
+        uint8 priority;
+        bool executed;
+        uint256 executedAtBlock;
+    }
