@@ -46,3 +46,19 @@ contract EwAI {
     uint256 public totalExecutions;
     uint256 public totalRewardDisbursed;
     uint256 private _reentrancyLock;
+
+    // ─── Upgrade (versioned, time-delayed; governor only) ─────────────────────────
+    uint256 public logicVersion;
+    uint256 public nextLogicVersion;
+    uint256 public upgradeEffectiveBlock;
+    uint256 public constant UPGRADE_MIN_DELAY_BLOCKS = 100;
+
+    // ─── Circuit breaker ──────────────────────────────────────────────────────
+    bool public paused;
+
+    // ─── Custom errors (EwAI-specific) ──────────────────────────────────────────
+    error EwAI_NotGovernor();
+    error EwAI_NotExecutor();
+    error EwAI_NotRelay();
+    error EwAI_QueueFull();
+    error EwAI_TaskNotFound();
