@@ -222,3 +222,19 @@ contract EwAI {
         capabilityByIndex[slotIndex] = CapabilitySlot({
             capabilityId: capabilityId,
             attester: msg.sender,
+            attestedAtBlock: block.number,
+            revoked: false
+        });
+
+        emit CapabilityAttested(slotIndex, capabilityId, msg.sender);
+    }
+
+    /// @notice Revoke a capability slot (governor only).
+    function revokeCapability(uint256 slotIndex) external onlyGovernor whenNotPaused {
+        if (slotIndex >= capabilitySlots) revert EwAI_InvalidCapabilityIndex();
+        CapabilitySlot storage slot = capabilityByIndex[slotIndex];
+        slot.revoked = true;
+        emit CapabilityRevoked(slotIndex, block.number);
+    }
+
+    /// @notice Disburse reward to treasury or a recipient (governor only). Contract must hold balance.
