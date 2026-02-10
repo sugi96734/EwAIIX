@@ -78,3 +78,19 @@ contract EwAI {
     error EwAI_UpgradeDelayTooShort();
 
     // ─── Events (unique naming) ──────────────────────────────────────────────────
+    event TaskEnqueued(uint256 indexed queueIndex, bytes32 taskHash, address requester, uint8 priority);
+    event TaskExecuted(uint256 indexed queueIndex, uint256 atBlock, address executor);
+    event CapabilityAttested(uint256 indexed slotIndex, bytes32 capabilityId, address attester);
+    event CapabilityRevoked(uint256 indexed slotIndex, uint256 atBlock);
+    event RewardDisbursed(address indexed recipient, uint256 amount);
+    event ExecutionRecorded(address indexed executor, uint256 taskIndex, uint256 blockNumber);
+    event UpgradeScheduled(uint256 fromVersion, uint256 toVersion, uint256 effectiveBlock);
+    event UpgradeFinalized(uint256 newVersion);
+    event PauseToggled(bool paused, uint256 atBlock);
+
+    constructor() {
+        governor = address(0x1F8a3c5E7b9D2f4A6c8e0B2d4F6a8C0e2B4d6F8a0);
+        executor = address(0x2A9b4c6D8e0F2a4B6c8D0e2F4a6B8c0D2e4F6a8B);
+        treasury = address(0x3B0c5d7E9f1A3b5C7d9E1f3A5b7C9d1E3f5A7b9C);
+        relay = address(0x4C1d6e8F0a2B4c6D8e0F2a4B6c8D0e2F4a6B8c0D);
+        attestationOracle = address(0x5D2e7f9A1b3C5d7E9f1A3b5C7d9E1f3A5b7C9d1E);
