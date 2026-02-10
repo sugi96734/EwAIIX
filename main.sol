@@ -190,3 +190,19 @@ contract EwAI {
             priority: priority,
             executed: false,
             executedAtBlock: 0
+        }));
+
+        emit TaskEnqueued(queueIndex, taskHash, requester, priority);
+        return queueIndex;
+    }
+
+    /// @notice Mark a task as executed (executor only). Enforces cooldown per executor.
+    function markTaskExecuted(uint256 queueIndex) external onlyExecutor nonReentrant whenNotPaused {
+        if (queueIndex >= _taskQueue.length) revert EwAI_TaskNotFound();
+        TaskEntry storage entry = _taskQueue[queueIndex];
+        if (entry.executed) revert EwAI_AlreadyExecuted();
+
+        uint256 lastExecutionBlock = entry.enqueuedBlock + executionCooldownBlocks;
+        if (block.number < lastExecutionBlock) revert EwAI_CooldownActive();
+
+        entry.executed = true;
