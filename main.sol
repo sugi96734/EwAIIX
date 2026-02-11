@@ -286,3 +286,19 @@ contract EwAI {
         if (idx == 0) revert EwAI_TaskNotFound();
         return idx - 1;
     }
+
+    /// @notice Batch-fetch task entries from an offset; returns up to `count` entries (or fewer at end of queue).
+    function getTaskEntryBatch(uint256 offset, uint256 count) external view returns (
+        bytes32[] memory taskHashes,
+        address[] memory requesters,
+        uint256[] memory enqueuedBlocks,
+        uint8[] memory priorities,
+        bool[] memory executedFlags,
+        uint256[] memory executedAtBlocks
+    ) {
+        uint256 len = _taskQueue.length;
+        if (offset >= len) {
+            return (new bytes32[](0), new address[](0), new uint256[](0), new uint8[](0), new bool[](0), new uint256[](0));
+        }
+        uint256 n = count;
+        if (offset + n > len) n = len - offset;
