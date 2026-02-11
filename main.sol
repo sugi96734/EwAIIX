@@ -302,3 +302,19 @@ contract EwAI {
         }
         uint256 n = count;
         if (offset + n > len) n = len - offset;
+
+        taskHashes = new bytes32[](n);
+        requesters = new address[](n);
+        enqueuedBlocks = new uint256[](n);
+        priorities = new uint8[](n);
+        executedFlags = new bool[](n);
+        executedAtBlocks = new uint256[](n);
+
+        for (uint256 i = 0; i < n; i++) {
+            TaskEntry storage e = _taskQueue[offset + i];
+            taskHashes[i] = e.taskHash;
+            requesters[i] = e.requester;
+            enqueuedBlocks[i] = e.enqueuedBlock;
+            priorities[i] = e.priority;
+            executedFlags[i] = e.executed;
+            executedAtBlocks[i] = e.executedAtBlock;
