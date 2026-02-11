@@ -318,3 +318,18 @@ contract EwAI {
             priorities[i] = e.priority;
             executedFlags[i] = e.executed;
             executedAtBlocks[i] = e.executedAtBlock;
+        }
+    }
+
+    /// @notice Whether an upgrade is pending and effective block has been reached (ready to finalize).
+    function isUpgradeReadyToFinalize() external view returns (bool) {
+        return nextLogicVersion != 0 && block.number >= upgradeEffectiveBlock;
+    }
+
+    /// @notice Block number after which the scheduled upgrade can be finalized.
+    function getUpgradeEffectiveBlock() external view returns (uint256) {
+        return upgradeEffectiveBlock;
+    }
+
+    receive() external payable {}
+}
