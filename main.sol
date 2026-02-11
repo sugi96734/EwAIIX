@@ -270,3 +270,19 @@ contract EwAI {
         return (e.taskHash, e.requester, e.enqueuedBlock, e.priority, e.executed, e.executedAtBlock);
     }
 
+    function getCapabilitySlot(uint256 index) external view returns (
+        bytes32 capabilityId,
+        address attester,
+        uint256 attestedAtBlock,
+        bool revoked
+    ) {
+        if (index >= capabilitySlots) revert EwAI_InvalidCapabilityIndex();
+        CapabilitySlot storage s = capabilityByIndex[index];
+        return (s.capabilityId, s.attester, s.attestedAtBlock, s.revoked);
+    }
+
+    function queueIndexForTask(bytes32 taskHash) external view returns (uint256) {
+        uint256 idx = taskIdToQueueIndex[taskHash];
+        if (idx == 0) revert EwAI_TaskNotFound();
+        return idx - 1;
+    }
